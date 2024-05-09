@@ -13,8 +13,11 @@ public class QuickQuark {
     public static final ForgeConfigSpec.IntValue maxConnectTimeout;
     public static final ForgeConfigSpec.IntValue maxReadTimeout;
     public static final ForgeConfigSpec.BooleanValue useProxy;
-    public static final ForgeConfigSpec.ConfigValue<String> proxyAddress;
+    public static final ForgeConfigSpec.ConfigValue<String> proxyHost;
     public static final ForgeConfigSpec.IntValue proxyPort;
+    public static final ForgeConfigSpec.BooleanValue needsAuthentication;
+    public static final ForgeConfigSpec.ConfigValue<String> proxyUsername;
+    public static final ForgeConfigSpec.ConfigValue<String> proxyPassword;
 
 
     static {
@@ -36,12 +39,23 @@ public class QuickQuark {
         useProxy = builder
                 .comment("Whether we should use proxy to boost the fetching.")
                 .define("useProxy", false);
-        proxyAddress = builder
-                .comment("The address of the proxy server.")
-                .define("proxyAddress", "127.0.0.1");
+        proxyHost = builder
+                .comment("The host of the proxy server.")
+                .define("proxyHost", "127.0.0.1");
         proxyPort = builder
                 .comment("The port number of the proxy server.")
                 .defineInRange("proxyPort", 7890, 0, 65535);
+        builder.push("authentication");
+        needsAuthentication = builder
+                .comment("Whether the proxy server needs authentication.")
+                .define("needsAuthentication", false);
+        proxyUsername = builder
+                .comment("The username used in authentication.")
+                .define("proxyUsername", "Username");
+        proxyPassword = builder
+                .comment("The password used in authentication.")
+                .define("proxyPassword", "PASSWORD");
+        builder.pop();
         builder.pop();
         CFG = builder.build();
     }
