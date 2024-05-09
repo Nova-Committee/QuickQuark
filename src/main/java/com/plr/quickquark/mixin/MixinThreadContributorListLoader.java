@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Mixin(targets = "vazkii.quark.base.handler.ContributorRewardHandler$ThreadContributorListLoader", remap = false)
 public abstract class MixinThreadContributorListLoader {
@@ -21,9 +23,16 @@ public abstract class MixinThreadContributorListLoader {
     )
     private URLConnection redirect$run$proxy(URL instance) throws IOException {
         if (!QuickQuark.useProxy.get()) return instance.openConnection();
-        final SocketAddress socketAddress = new InetSocketAddress(QuickQuark.proxyAddress.get(), QuickQuark.proxyPort.get());
+        final String host = QuickQuark.proxyHost.get();
+        final int port = QuickQuark.proxyPort.get();
+        final SocketAddress socketAddress = new InetSocketAddress(host, port);
         final Proxy proxy = new Proxy(Proxy.Type.HTTP, socketAddress);
-        return instance.openConnection(proxy);
+        final boolean needsAuth = QuickQuark.needsAuthentication.get();
+        if (!needsAuth) return instance.openConnection(proxy);
+        final String proxyHeader = Base64.getEncoder().encodeToString((QuickQuark.proxyUsername.get() + ":" + QuickQuark.proxyPassword.get()).getBytes(StandardCharsets.UTF_8));
+        final URLConnection conn = instance.openConnection(proxy);
+        conn.setRequestProperty("Proxy-Authorization", "Basic " + proxyHeader);
+        return conn;
     }
 
     @Redirect(
