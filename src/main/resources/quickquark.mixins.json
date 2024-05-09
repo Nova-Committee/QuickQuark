@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.plr.quickquark.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "quickquark.refmap.json",
+  "mixins": [
+    "MixinContributorRewardHandler",
+    "MixinThreadContributorListLoader"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
