@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.io.IOException;
 import java.net.*;
 
-@Mixin(targets = "vazkii.quark.base.handler.ContributorRewardHandler$ThreadContributorListLoader", remap = false)
+@Mixin(targets = "org.violetmoon.quark.base.handler.ContributorRewardHandler$ThreadContributorListLoader", remap = false)
 public abstract class MixinThreadContributorListLoader {
     @Redirect(
             method = "run",
